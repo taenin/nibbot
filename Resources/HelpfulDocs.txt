@@ -1,0 +1,2 @@
+Simple example of Q learning with naive implementation as well as neural network implementation using openAI gym:
+https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0
