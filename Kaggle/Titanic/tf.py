@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 data_train = pd.read_csv('./input/train.csv')
 data_test = pd.read_csv('./input/test.csv')
+ids = data_test['PassengerId']
 
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True) # reads in the MNIST dataset
@@ -70,7 +71,7 @@ def encode_features(df_train, df_test):
     return df_train, df_test
     
 data_train, data_test = encode_features(data_train, data_test)
-print(data_train.head())
+#print(data_train.head())
 
 
 
@@ -181,3 +182,11 @@ with tf.Session() as sess:
      # evaluate our testing accuracy       
     acc = accuracy.eval(feed_dict = {x: X_test, y_: y_test})
     print("testing accuracy: {}".format(acc))
+    data_test = np.apply_along_axis(lambda x: (x - m_v) / v_v, 1, data_test)
+    #Run the DNN!
+    results = sess.run(y, feed_dict = {x: data_test})
+    #Conver the results into a single column vector with 0s and 1s
+    predictions = np.apply_along_axis(lambda x: 0 if x[0] > x[1] else 1, 1, results)
+    output = pd.DataFrame({ 'PassengerId' : ids, 'Survived': predictions })
+    output.to_csv('titanic-predictions-DNN.csv', index = False)
+    output.head()
